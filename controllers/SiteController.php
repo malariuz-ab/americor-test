@@ -96,4 +96,18 @@ class SiteController extends Controller
             return $this->render('news', ['model' => $model, 'subscriptionForm' => $subscriptionForm, 'banners' => $banners]);
         }
     }
+	
+	/**
+     * @param $name
+     * @return array|Banner[]
+     */
+    private function getBanners($name) : array
+    {
+        return Banner::find()
+            ->active()
+            ->where(['like', 'where_used', '%'. $name .'%'])
+            ->orWhere(['like', 'where_used', $name .'%'])
+            ->orWhere(['like', 'where_used', $name])
+            ->all();
+    }
 }

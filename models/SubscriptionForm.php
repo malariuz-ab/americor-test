@@ -58,7 +58,7 @@ class SubscriptionForm extends Model
                 ->compose('subscription-subscriber-html', ['subscription' => $subscription])
                 ->setTo($this->email)
                 ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->params['senderName']])
-                ->setSubject(Yii::t('app','Подтверждение подписки на Industry Hunter'))
+                ->setSubject(Yii::t('app','Подтверждение подписки'))
                 ->send();
         }
 
