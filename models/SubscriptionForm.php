@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\helpers\HtmlPurifier;
-use common\models\Subscription;
+use app\models\Subscription;
 
 class SubscriptionForm extends Model
 {

@@ -7,8 +7,14 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
+use yii\base\InvalidArgumentException;
+use yii\web\BadRequestHttpException;
 use app\models\Event;
+use app\models\Banner;
 use app\models\SubscriptionForm;
+use app\models\VerifySubscriptionHashForm;
+use app\helpers\Constant
 
 class SiteController extends Controller
 {
@@ -83,7 +89,7 @@ class SiteController extends Controller
         $banners = $this->getBanners(Banner::WHERE_USED_NEWS_MAIN_PAGE);
 
         if (!$model) {
-            throw new NotFoundHttpException(Yii::t('app', 'Страница не найдена'));
+            throw new NotFoundHttpException(Yii::t('app', 'Sorry! Страница не найдена'));
         }
 
         if (Yii::$app->request->isAjax) {
@@ -95,6 +101,48 @@ class SiteController extends Controller
         } else {
             return $this->render('news', ['model' => $model, 'subscriptionForm' => $subscriptionForm, 'banners' => $banners]);
         }
+    }
+	
+	/**
+     * Saves a subscription
+     * @return array|bool
+     */
+    public function actionSaveSubscription()
+    {
+        $model = new SubscriptionForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                if ($model->save()) {
+                    return ['message' => Yii::t('app', 'Спасибо за подписку.')];
+                } else {
+                    return ['errors' => $model->getErrors(), 'message' => Yii::t('ih', 'Упс! Что-то пошло не так...')];
+                }
+            }
+        }
+        return false;
+    }
+	
+	/**
+     * Approves a subscription
+     * @param string $token
+     * @return Response
+     * @throws BadRequestHttpException
+     */
+    public function actionApproveSubscription($token)
+    {
+        try {
+            $model = new VerifySubscriptionHashForm($token);
+        } catch (InvalidArgumentException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
+        if ($model->verifyHash()) {
+            Yii::$app->session->setFlash('success', Yii::t('ih', 'Ваша подписка успешно подтерждена'));
+        } else {
+            Yii::$app->session->setFlash('error', Yii::t('ih', 'К сожалению, мы не можем подтвердить Ваш email'));
+        }
+
+        return $this->goHome();
     }
 	
 	/**
