@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
@@ -16,7 +15,7 @@ use app\models\SubscriptionForm;
 use app\models\VerifySubscriptionHashForm;
 use app\helpers\Constant;
 
-class SiteController extends Controller
+class SiteController extends \yii\web\Controller
 {
     /**
      * {@inheritdoc}
