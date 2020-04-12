@@ -2,15 +2,15 @@
 
 use yii\helpers\Url;
 use yii\bootstrap4\Html;
-use common\helpers\Constant;
+use app\helpers\Constant;
 
-/* @var $model common\models\Event */
-/* @var $subscriptionForm frontend\models\forms\SubscriptionForm */
-/* @var $banners common\models\Banner */
+/* @var $model app\models\Event */
+/* @var $subscriptionForm app\models\SubscriptionForm */
+/* @var $banners app\models\Banner */
 
-$this->title = Yii::t('ih', 'Новости электроники и микроэлектроники');
-$this->registerMetaTag(['name' => 'description', 'content' => Yii::t('ih', 'Наиболее полная лента новостей по производству электроники и микроэлектроники, аналитика, технологии, анонсы событий и выставок, вакансии компаний.')]);
-$this->registerMetaTag(['name' => 'keywords', 'content' => Yii::t('ih', 'Новости электроники, новости микроэлектроники, лента новостей, аналитика, новостной портал, высокие технологии, хай-тек, производство электроники, полупроводниковое производство, поверхностный монтаж, электронный компонент, микросхемы, печатная плата, печатный монтаж, основы электроники, время электроники, фабричка, электроника схемы.')]);
+$this->title = Yii::t('ih', 'Новости');
+$this->registerMetaTag(['name' => 'description', 'content' => Yii::t('ih', 'Наиболее полная лента новостей по производству.')]);
+$this->registerMetaTag(['name' => 'keywords', 'content' => Yii::t('ih', 'Лента новостей, аналитика, новостной портал.')]);
 $this->registerLinkTag(['rel' => 'canonical', 'href' => Url::to(['/event/news'], true)], 'news-canonical-link');
 
 $this->params['breadcrumbs'][] = $this->title;
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?php if (count($model) >= Constant::AJAX_UPLOAD_LIMIT) : ?>
                 <div class="col-12">
-                    <?= Html::button(Yii::t('ih', 'Ещё') . '<i class="fas fa-angle-down ml-2"></i>', [
+                    <?= Html::button(Yii::t('app', 'Ещё') . '<i class="fas fa-angle-down ml-2"></i>', [
                         'class' => 'btn btn-green d-block w-25 mx-auto',
                         'data' => [
                             'object' => 'show-more-button',
