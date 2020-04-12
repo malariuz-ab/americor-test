@@ -5,6 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+	'language' => 'ru',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -43,6 +44,18 @@ $config = [
             ],
         ],
         'db' => $db,
+		'i18n' => [
+            'translations' => [
+                'ih*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'sourceLanguage' => 'ru-RU',
+                    'basePath' => '@app/messages',
+                    'fileMap' => [
+                        'app' => 'app.php',
+                    ]
+                ],
+            ],
+        ],
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
