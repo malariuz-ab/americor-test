@@ -14,7 +14,7 @@ use app\models\Event;
 use app\models\Banner;
 use app\models\SubscriptionForm;
 use app\models\VerifySubscriptionHashForm;
-use app\helpers\Constant
+use app\helpers\Constant;
 
 class SiteController extends Controller
 {
