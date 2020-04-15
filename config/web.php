@@ -5,21 +5,21 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
-	'language' => 'ru',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'name' => 'Americor Test',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => '',
+            'cookieValidationKey' => '_KrWQvmDJum_stF3vIO3MgXIyKn-rX28',
         ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
-        ],
+//        'cache' => [
+//            'class' => 'yii\caching\FileCache',
+//        ],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
@@ -44,18 +44,6 @@ $config = [
             ],
         ],
         'db' => $db,
-		'i18n' => [
-            'translations' => [
-                'ih*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'sourceLanguage' => 'ru-RU',
-                    'basePath' => '@app/messages',
-                    'fileMap' => [
-                        'app' => 'app.php',
-                    ]
-                ],
-            ],
-        ],
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -64,6 +52,11 @@ $config = [
             ],
         ],
         */
+    ],
+    'modules' => [
+        'gridview' => [
+            'class' => '\kartik\grid\Module'
+        ]
     ],
     'params' => $params,
 ];

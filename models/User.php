@@ -2,103 +2,86 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use Yii;
+
+/**
+ * This is the model class for table "{{%user}}".
+ *
+ * @property integer $id
+ * @property string $username
+ * @property string $email
+ * @property integer $status
+ * @property integer $created_at
+ * @property integer $updated_at
+ */
+class User extends \yii\db\ActiveRecord
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
+    const STATUS_DELETED = 0;
+    const STATUS_HIDDEN = 1;
+    const STATUS_ACTIVE = 10;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public static function findIdentity($id)
+    public static function tableName()
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return '{{%user}}';
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public function rules()
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
+        return [
+            [['username', 'created_at', 'updated_at'], 'required'],
+            [[
+                'status',
+                'created_at',
+                'updated_at',
+            ], 'integer'],
+            [[
+                'username',
+                'email',
+            ], 'string', 'max' => 255],
 
-        return null;
+            [['username'], 'unique'],
+
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_HIDDEN]],
+        ];
     }
 
     /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
+     * @inheritdoc
      */
-    public static function findByUsername($username)
+    public function attributeLabels()
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'username' => Yii::t('app', 'Username (login)'),
+            'statusText' => Yii::t('app', 'Status'),
+        ];
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function getId()
+    public static function getStatusTexts()
     {
-        return $this->id;
+        return [
+            self::STATUS_ACTIVE => Yii::t('app', 'Active'),
+            self::STATUS_DELETED => Yii::t('app', 'Deleted'),
+            self::STATUS_HIDDEN => Yii::t('app', 'Hidden'),
+        ];
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function getAuthKey()
+    public function getStatusText()
     {
-        return $this->authKey;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
+        $a = self::getStatusTexts();
+        return isset($a[$this->status]) ? $a[$this->status] : $this->status;
     }
 }
