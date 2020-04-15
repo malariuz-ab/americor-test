@@ -13,6 +13,8 @@ use yii\data\ActiveDataProvider;
  */
 class HistorySearch extends History
 {
+    public $globalSearch;
+    
     /**
      * @inheritdoc
      */
@@ -20,6 +22,7 @@ class HistorySearch extends History
     {
         return [
             [[
+                'globalSearch',
                 'customer_id',
                 'objects',
                 'user_id',
@@ -100,11 +103,8 @@ class HistorySearch extends History
             'call',
             'fax',
         ]);
-
-        $query->andFilterWhere([
-            'history.customer_id' => $this->customer_id,
-            'history.user_id' => $this->user_id
-        ]);
+        
+        $query->orFilterWhere(['like', 'message', $this->globalSearch]); // plus a few attributes for search
 
         return $dataProvider;
     }
